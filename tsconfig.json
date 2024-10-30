@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "checkJs": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true,
+        "removeComments": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "target": "ESNext",
+        "useDefineForClassFields": true,
+        "moduleResolution": "Node",
+        "module": "CommonJS",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    },
+    "include": [
+        "**/*.js",
+        "**/*.env",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.json"
+    ],
+    "exclude": [
+        "dist"
+    ]
+}
