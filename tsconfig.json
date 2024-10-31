@@ -19,7 +19,8 @@
         "moduleResolution": "Node",
         "module": "CommonJS",
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "outDir": "./dist",
     },
     "include": [
         "**/*.js",
@@ -28,7 +29,4 @@
         "**/*.tsx",
         "**/*.json"
     ],
-    "exclude": [
-        "dist"
-    ]
 }
