@@ -10,7 +10,7 @@ export function createServer(): Express {
     server.use(logger);
     server.use(cors());
     server.use(json());
-    server.use(routes);
+    server.use("/api", routes);
     server.use(notFound);
     server.use(error);
 

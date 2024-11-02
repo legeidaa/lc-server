@@ -5,6 +5,7 @@ import { User } from './models';
 import { isDevelopment } from '../utils/isDevelopment';
 import 'dotenv/config' 
 import { POSTGRES_DB, POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USER } from '../../env';
+import { Game } from './models/Game';
 console.log(isDevelopment(), 'ISDEV');
 
 
@@ -18,7 +19,7 @@ export const createDatabaseClient = (): Sequelize => {
     database: POSTGRES_DB,
     // eslint-disable-next-line no-console
     logging: isDevelopment() ? (msg) => console.debug(msg) : undefined,
-    models: [ User],
+    models: [ Game, User],
     dialectModule: pg,
   });
 };

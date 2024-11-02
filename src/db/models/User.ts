@@ -3,9 +3,10 @@ import {
     Column,
     Model,
     DataType,
-    CreatedAt,
-    UpdatedAt,
+    BelongsTo,
+    ForeignKey,
 } from "sequelize-typescript";
+import { Game } from "./Game";
 
 @Table({
     tableName: "users",
@@ -18,24 +19,45 @@ export class User extends Model {
         autoIncrement: true,
         allowNull: false,
     })
-    declare id: number;
+    declare userId: number;
+
+    @ForeignKey(() => Game)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+    })
+    declare gameId: number;
+
+    @BelongsTo(() => Game)
+    declare game: Game;
 
     @Column({
         type: DataType.STRING,
         allowNull: false,
     })
-    declare password: string;
+    declare name: string;
 
     @Column({
         type: DataType.STRING,
         allowNull: false,
-        unique: true,
     })
     declare email: string;
+
     @Column({
         type: DataType.STRING,
         allowNull: false,
-        unique: true,
+    })
+    declare sex: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
     })
     declare role: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: true,
+    })
+    declare hasResources: boolean;
 }

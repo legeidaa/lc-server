@@ -19,9 +19,15 @@ export function error(
     next: NextFunction
 ): void {
     logError(err.stack);
+
     if (err instanceof ApiError) {
-        res.status(err.status).json({ message: err.message });
+        res.status(err.status);
+        res.send({
+            error: {
+                message: err.message,
+            },
+        });
     }
 
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).send({ message: "Internal Server Error" });
 }
