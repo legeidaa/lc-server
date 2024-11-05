@@ -5,8 +5,11 @@ import {
     DataType,
     BelongsTo,
     ForeignKey,
+    HasMany,
 } from "sequelize-typescript";
 import { Game } from "./Game";
+import { Action } from "./Action";
+import { Expectation } from "./Expectation";
 
 @Table({
     tableName: "users",
@@ -60,4 +63,10 @@ export class User extends Model {
         allowNull: true,
     })
     declare hasResources: boolean;
+
+    @HasMany(() => Action)
+    declare actions: number[];
+
+    @HasMany(() => Expectation)
+    declare expectations: number[];
 }

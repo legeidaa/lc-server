@@ -1,6 +1,6 @@
 import cors from "cors";
 import express, { json, type Express } from "express";
-import { error, logger, notFound } from "./middlewares";
+import { errorHandler, logger, notFound } from "./middlewares";
 import { routes } from "./routes";
 
 export function createServer(): Express {
@@ -12,7 +12,7 @@ export function createServer(): Express {
     server.use(json());
     server.use("/api", routes);
     server.use(notFound);
-    server.use(error);
+    server.use(errorHandler);
 
     return server;
 }

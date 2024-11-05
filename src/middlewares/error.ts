@@ -12,7 +12,7 @@ export class ApiError extends Error {
     }
 }
 
-export function error(
+export function errorHandler(
     err: Error,
     req: Request,
     res: Response,

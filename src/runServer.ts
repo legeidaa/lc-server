@@ -1,6 +1,7 @@
 import { connectDatabase } from './db/connectDatabase';
 import { SERVER_PORT } from '../env';
 import { createServer } from './createServer';
+import { errorHandler } from './middlewares';
 
 export async function runServer() {
   try {

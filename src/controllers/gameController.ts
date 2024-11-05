@@ -25,10 +25,11 @@ class GameController {
             next(error);
         }
     };
-    
+
     getByUuid = async (req: Request, res: Response, next: NextFunction) => {
-        const { uuid } = req.params;
         try {
+            const { uuid } = req.params;
+
             const game = await Game.findOne({
                 where: {
                     gameHash: uuid,
@@ -36,9 +37,21 @@ class GameController {
                 include: [User],
             });
             if (!game) {
-                throw new ApiError(404, "Game not found");
+                next(new ApiError(404, "Game not found"));
             }
             res.json(game);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    getAll = async (_: Request, res: Response, next: NextFunction) => {
+        try {
+            const games = await Game.findAll({
+                include: [User],
+            });
+
+            res.json(games);
         } catch (error) {
             next(error);
         }

@@ -17,20 +17,20 @@ class UserController {
         res: Response,
         next: NextFunction
     ) => {
-        const { gameId, name, email, sex, role } =
-            req.body as CreateUserRequest;
-
-        checkReqFields(gameId, name, email, sex, role);
-
-        if (sex !== "male" && sex !== "female") {
-            throw new ApiError(400, "Invalid sex value");
-        }
-
-        if (role !== "player" && role !== "partner") {
-            throw new ApiError(400, "Invalid role value");
-        }
-
         try {
+            const { gameId, name, email, sex, role } =
+                req.body as CreateUserRequest;
+
+            checkReqFields(next, [gameId, name, email, sex, role]);
+
+            if (sex !== "male" && sex !== "female") {
+                throw new ApiError(400, "Invalid sex value");
+            }
+
+            if (role !== "player" && role !== "partner") {
+                throw new ApiError(400, "Invalid role value");
+            }
+
             const user = await User.create({ gameId, name, email, sex, role });
             res.json(user);
         } catch (error) {
@@ -39,8 +39,8 @@ class UserController {
     };
 
     getUsers = async (req: Request, res: Response, next: NextFunction) => {
-        const { gameId } = req.params;
         try {
+            const { gameId } = req.params;
             const users = await User.findAll({
                 where: { gameId },
             });
