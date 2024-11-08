@@ -48,6 +48,7 @@ class ActionController {
                 userId: string;
                 type: string;
             };
+            
             const actions = await Action.findAll({
                 where: { userId, type },
             });

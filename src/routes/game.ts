@@ -5,5 +5,5 @@ export const gameRouter = Router();
 
 gameRouter.post("/", gameController.create);
 gameRouter.get("/:uuid", gameController.getByUuid);
-gameRouter.get("/", gameController.getAll);
+gameRouter.get("/all", gameController.getAll);
 // gameRouter.put('/:uuid', gameController.updateRole)

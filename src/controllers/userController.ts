@@ -38,6 +38,7 @@ class UserController {
         }
     };
 
+
     getUsers = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { gameId } = req.params;
