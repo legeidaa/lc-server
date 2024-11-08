@@ -38,6 +38,46 @@ class UserController {
         }
     };
 
+    createPair = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const [player, partner] = req.body as CreateUserRequest[];
+            console.log(player, partner);
+            if (req.body.length !== 2 || !player || !partner) {
+                throw new ApiError(400, "Invalid request body");
+            }
+
+            const usersToCreate = [player, partner].map((user) => {
+                checkReqFields(next, [
+                    user.gameId,
+                    user.email,
+                    user.name,
+                    user.role,
+                    user.sex,
+                ]);
+
+                if (user.sex !== "male" && user.sex !== "female") {
+                    throw new ApiError(400, "Invalid sex value");
+                }
+
+                if (user.role !== "player" && user.role !== "partner") {
+                    throw new ApiError(400, "Invalid role value");
+                }
+
+                return {
+                    gameId: user.gameId,
+                    name: user.name,
+                    email: user.email,
+                    sex: user.sex,
+                    role: user.role,
+                };
+            });
+
+            const user = await User.bulkCreate(usersToCreate);
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    };
 
     getUsers = async (req: Request, res: Response, next: NextFunction) => {
         try {
