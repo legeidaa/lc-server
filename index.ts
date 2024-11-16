@@ -1,2 +1,3 @@
-import { runServer } from "./src";
+import { runServer } from "./src/runServer";
+
 void runServer();

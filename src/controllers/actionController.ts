@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../middlewares/error";
 import { checkReqFields } from "../utils/checkReqFields";
 import { Action } from "../db/models/Action";
+import { Json } from "sequelize/types/utils";
 
 const ActionType = ["green", "yellow", "blue", "gray"] as const;
 type ActionType = (typeof ActionType)[number];
@@ -10,33 +11,43 @@ const isActionType = (value: unknown): value is ActionType => {
     return ActionType.includes(value as ActionType);
 };
 
-interface CreateActionRequest {
+type CreateActionRequest = {
+    actionId: number;
     userId: number;
     title: string;
     type: ActionType;
-}
+    cost: number;
+};
 
 class ActionController {
-    create = async (
-        req: Request<CreateActionRequest>,
+    createOrUpdate = async (
+        req: Request,
         res: Response,
         next: NextFunction
     ) => {
         try {
-            const { userId, title, type } = req.body as CreateActionRequest;
+            const body = req.body as CreateActionRequest[];
 
-            checkReqFields(next, [userId, title, type]);
-
-            if (isActionType(type) === false) {
-                throw new ApiError(400, "Invalid type value");
+            if (Array.isArray(body) === false) {
+                throw new ApiError(400, "Request body must be array");
             }
-            const action = await Action.create({
-                userId,
-                title,
-                type,
-                cost: null,
+            body.forEach((action) => {
+                checkReqFields(next, [
+                    action.userId,
+                    action.title,
+                    action.type,
+                ]);
+
+                if (isActionType(action.type) === false) {
+                    throw new ApiError(400, "Invalid type value");
+                }
             });
-            res.json(action);
+
+            const actions = await Action.bulkCreate(body, {
+                updateOnDuplicate: ["title", "cost"],
+            });
+
+            res.json(actions);
         } catch (error) {
             next(error);
         }
@@ -48,7 +59,7 @@ class ActionController {
                 userId: string;
                 type: string;
             };
-            
+
             const actions = await Action.findAll({
                 where: { userId, type },
             });

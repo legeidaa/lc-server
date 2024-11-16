@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import type { Request, Response, NextFunction } from "express";
-import { logError } from "../../src/utils/logError";
 
 export class ApiError extends Error {
     status: number;
@@ -18,7 +15,16 @@ export function errorHandler(
     res: Response,
     next: NextFunction
 ): void {
-    logError(err.stack);
+    console.log(
+        "ERR NAME: \n",
+        err.name,
+        "\nERR MESSAGE: \n",
+        err.message,
+        "\nERR CAUSE: \n",
+        err.cause,
+        "\nERR STACK: \n",
+        err.stack
+    );
 
     if (err instanceof ApiError) {
         res.status(err.status);
