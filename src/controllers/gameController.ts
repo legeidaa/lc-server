@@ -3,6 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../middlewares/error";
 import { Game } from "../db/models/Game";
 import uuid from "short-uuid";
+import { Expectation } from "../db/models/Expectation";
+import { Action } from "../db/models/Action";
 
 interface CreateGameRequest {
     first_name: string;
@@ -34,7 +36,10 @@ class GameController {
                 where: {
                     gameHash: uuid,
                 },
-                include: [User],
+                include: [{
+                    model: User,
+                    include: [Action, Expectation],
+                }],
             });
             if (!game) {
                 next(new ApiError(404, "Game not found"));
