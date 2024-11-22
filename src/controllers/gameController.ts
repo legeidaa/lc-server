@@ -38,7 +38,6 @@ class GameController {
                 },
                 include: [{
                     model: User,
-                    include: [Action, Expectation],
                 }],
             });
             if (!game) {

@@ -80,6 +80,20 @@ class ActionController {
             next(error);
         }
     };
+
+    delete = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params as { id: string };
+            const action = await Action.findByPk(id);
+            if (!action) {
+                throw new ApiError(404, "Action not found");
+            }
+            await action.destroy();
+            res.json({ success: true, id: id });
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 export const actionController = new ActionController();
