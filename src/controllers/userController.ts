@@ -91,17 +91,36 @@ class UserController {
         }
     };
 
-    // getAll = async (_: Request, res: Response, next: NextFunction) => {
-    //     try {
-    //         const users = await User.findAll();
-    //         res.json(users);
-    //     } catch (error) {
-    //         if (error instanceof ApiError) {
-    //             res.status(error.status).json({ message: error.message });
-    //         }
-    //         res.status(500).json(error);
-    //     }
-    // };
+    changeResources = async (
+        req: Request<{
+            userId: number;
+            hasResources: boolean;
+        }>,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const { userId, hasResources } = req.body;
+
+            checkReqFields(next, [userId, hasResources]);
+
+            if (typeof hasResources !== "boolean") {
+                throw new ApiError(400, "hasResources value should be boolean");
+            }
+
+            const user = await User.findOne({
+                where: { userId },
+            });
+            if (!user) {
+                throw new ApiError(404, "User not found");
+            }
+            await user?.update({ hasResources });
+
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    };
 }
 
 export const userController = new UserController();
