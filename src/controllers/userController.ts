@@ -41,7 +41,6 @@ class UserController {
     createPair = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const [player, partner] = req.body as CreateUserRequest[];
-            console.log(player, partner);
             if (req.body.length !== 2 || !player || !partner) {
                 throw new ApiError(400, "Invalid request body");
             }
