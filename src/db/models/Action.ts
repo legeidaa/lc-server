@@ -24,7 +24,7 @@ export class Action extends Model {
     @Column({
         type: DataType.INTEGER,
     })
-    declare cost: number;
+    declare estimate: number;
 
     @Column({
         type: DataType.STRING,

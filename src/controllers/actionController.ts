@@ -19,7 +19,7 @@ type CreateActionRequest = {
 
 type UpdateActionsRequest = {
     actionId: number;
-    cost: number;
+    estimate: number;
 } & CreateActionRequest;
 
 class ActionController {
@@ -77,7 +77,7 @@ class ActionController {
             });
 
             const actions = await Action.bulkCreate(body, {
-                updateOnDuplicate: ["title", "cost"],
+                updateOnDuplicate: ["title", "estimate"],
             });
 
             res.json(actions);
