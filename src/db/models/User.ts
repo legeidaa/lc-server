@@ -60,6 +60,13 @@ export class User extends Model {
 
     @Column({
         type: DataType.STRING,
+        allowNull: false,
+        defaultValue: "",
+    })
+    declare message: string;
+
+    @Column({
+        type: DataType.STRING,
         allowNull: true,
     })
     declare hasResources: boolean;

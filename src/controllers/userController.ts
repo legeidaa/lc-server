@@ -13,13 +13,12 @@ interface CreateUserRequest {
 
 class UserController {
     create = async (
-        req: Request<CreateUserRequest>,
+        req: Request<{}, {}, CreateUserRequest>,
         res: Response,
         next: NextFunction
     ) => {
         try {
-            const { gameId, name, email, sex, role } =
-                req.body as CreateUserRequest;
+            const { gameId, name, email, sex, role } = req.body;
 
             checkReqFields(next, [gameId, name, email, sex, role]);
 
@@ -91,10 +90,14 @@ class UserController {
     };
 
     changeResources = async (
-        req: Request<{
-            userId: number;
-            hasResources: boolean;
-        }>,
+        req: Request<
+            {},
+            {},
+            {
+                userId: number;
+                hasResources: boolean;
+            }
+        >,
         res: Response,
         next: NextFunction
     ) => {
@@ -114,6 +117,39 @@ class UserController {
                 throw new ApiError(404, "User not found");
             }
             await user?.update({ hasResources });
+
+            res.json(user);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    changeMessage = async (
+        req: Request<
+            {},
+            {},
+            {
+                userId: number;
+                message: string;
+            }
+        >,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const { userId, message } = req.body;
+
+            if (typeof message !== "string") {
+                throw new ApiError(400, "message value should be string");
+            }
+
+            const user = await User.findOne({
+                where: { userId },
+            });
+            if (!user) {
+                throw new ApiError(404, "User not found");
+            }
+            await user?.update({ message });
 
             res.json(user);
         } catch (error) {
