@@ -3,18 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../middlewares/error";
 import { Game } from "../db/models/Game";
 import uuid from "short-uuid";
-import { Expectation } from "../db/models/Expectation";
-import { Action } from "../db/models/Action";
-
-interface CreateGameRequest {
-    first_name: string;
-    second_name: string;
-    display_name: string;
-    login: string;
-    email: string;
-    phone: string;
-    avatar: string;
-}
+import { checkReqFields } from "../utils/checkReqFields";
 
 class GameController {
     create = async (_: Request, res: Response, next: NextFunction) => {
@@ -28,17 +17,19 @@ class GameController {
         }
     };
 
-    getByUuid = async (req: Request, res: Response, next: NextFunction) => {
+    getByHash = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { uuid } = req.params;
+            const { hash } = req.params;
 
             const game = await Game.findOne({
                 where: {
-                    gameHash: uuid,
+                    gameHash: hash,
                 },
-                include: [{
-                    model: User,
-                }],
+                include: [
+                    {
+                        model: User,
+                    },
+                ],
             });
             if (!game) {
                 next(new ApiError(404, "Game not found"));
@@ -56,6 +47,40 @@ class GameController {
             });
 
             res.json(games);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    changeCurrentUserRole = async (
+        req: Request<{}, {}, { hash: string; roleToUpdate: string }>,
+        res: Response,
+        next: NextFunction
+    ) => {
+        try {
+            const { hash, roleToUpdate } = req.body;
+
+            checkReqFields(next, [hash, roleToUpdate]);
+
+            if (!(roleToUpdate === "player" || roleToUpdate === "partner")) {
+                throw new ApiError(
+                    400,
+                    "roleToUpdate value should be player or partner"
+                );
+            }
+
+            const game = await Game.findOne({
+                where: {
+                    gameHash: hash,
+                },
+            });
+            if (!game) {
+                throw new ApiError(404, "Game not found");
+            }
+
+            game.update({ currentUserRole: roleToUpdate });
+
+            res.json(game);
         } catch (error) {
             next(error);
         }
