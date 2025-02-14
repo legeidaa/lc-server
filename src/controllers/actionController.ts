@@ -77,7 +77,7 @@ class ActionController {
             });
 
             const actions = await Action.bulkCreate(body, {
-                updateOnDuplicate: ["title", "estimate"],
+                updateOnDuplicate: ["title", "estimate", "partnerEstimate"],
             });
 
             res.json(actions);

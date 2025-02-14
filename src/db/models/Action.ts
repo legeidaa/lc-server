@@ -27,6 +27,11 @@ export class Action extends Model {
     declare estimate: number;
 
     @Column({
+        type: DataType.INTEGER,
+    })
+    declare partnerEstimate: number;
+
+    @Column({
         type: DataType.STRING,
         allowNull: false,
     })
